@@ -1,7 +1,6 @@
 package com.vaadin.tatu.ui.views.orderedit;
 
 import java.time.LocalTime;
-import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -13,10 +12,8 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.BeanValidationBinder;
-import com.vaadin.data.Binder;
 import com.vaadin.data.BindingValidationStatus;
 import com.vaadin.data.HasValue;
-import com.vaadin.data.ValidationException;
 import com.vaadin.data.ValueContext;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;

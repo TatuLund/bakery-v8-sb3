@@ -9,17 +9,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class ApplicationConfiguration {
 
-	/**
-	 * The password encoder to use when encrypting passwords.
-	 */
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    /**
+     * The password encoder to use when encrypting passwords.
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-	@Bean
-	SecuredViewAccessControl securedViewAccessControl()
-	{
-		return new SecuredViewAccessControl();
-	}
+    @Bean
+    SecuredViewAccessControl securedViewAccessControl() {
+        return new SecuredViewAccessControl();
+    }
 }
