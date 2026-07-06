@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewDisplay;
-import com.vaadin.navigator.ViewLeaveAction;
 import com.vaadin.spring.annotation.SpringViewDisplay;
 import com.vaadin.spring.annotation.UIScope;
+import com.vaadin.tatu.app.Application;
 import com.vaadin.tatu.ui.navigation.NavigationManager;
 import com.vaadin.tatu.ui.views.admin.product.ProductAdminView;
 import com.vaadin.tatu.ui.views.admin.user.UserAdminView;
@@ -98,13 +98,10 @@ public class MainView extends MainViewDesign implements ViewDisplay {
      * changes.
      */
     public void logout() {
-        ViewLeaveAction doLogout = () -> {
+        navigationManager.runAfterLeaveConfirmation(() -> {
             UI ui = getUI();
-            ui.getSession().getSession().invalidate();
-            ui.getPage().reload();
-        };
-
-        navigationManager.runAfterLeaveConfirmation(doLogout);
+            ui.getPage().setLocation(Application.LOGOUT_PROCESSING_URL);
+            ui.getSession().close();
+        });
     }
-
 }
