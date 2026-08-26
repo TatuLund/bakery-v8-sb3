@@ -5,15 +5,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import com.vaadin.tatu.app.Application;
-import com.vaadin.tatu.backend.data.Role;
-
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {
@@ -32,10 +29,17 @@ public class SecurityConfig {
         // Not using Spring CSRF here to be able to use plain HTML for the login
         // page
 
+        http.securityContext(securityContext -> securityContext
+            .securityContextRepository(
+                new HttpSessionSecurityContextRepository())
+            .requireExplicitSave(false));
+
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(new AntPathRequestMatcher("/VAADIN/**"))
-                .permitAll().requestMatchers(new AntPathRequestMatcher("/**"))
-                .hasAnyAuthority(Role.getAllRoles()));
+            .requestMatchers("/VAADIN/**", "/favicon.ico",
+                Application.LOGIN_URL, Application.LOGIN_PROCESSING_URL,
+                Application.LOGIN_FAILURE_URL, Application.LOGOUT_URL,
+                Application.LOGOUT_PROCESSING_URL)
+            .permitAll().anyRequest().authenticated());
         http.csrf(csrfCustomizer -> csrfCustomizer.disable());
 
         http.formLogin(config -> config.loginPage(Application.LOGIN_URL)
@@ -43,7 +47,16 @@ public class SecurityConfig {
                 .failureUrl(Application.LOGIN_FAILURE_URL)
                 .successHandler(successHandler).permitAll());
 
-        http.logout(config -> config.logoutSuccessUrl(Application.LOGOUT_URL));
+        http.logout(config -> config
+            .logoutRequestMatcher(request -> Application.LOGOUT_PROCESSING_URL
+                .equals(request.getServletPath())
+                && "GET".equals(request.getMethod()))
+            .logoutUrl(Application.LOGOUT_PROCESSING_URL)
+            .invalidateHttpSession(true)
+            .clearAuthentication(true)
+            .deleteCookies("JSESSIONID")
+            .logoutSuccessUrl(Application.LOGOUT_URL)
+            .permitAll());
 
         return http.build();
     }

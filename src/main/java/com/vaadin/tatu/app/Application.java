@@ -2,8 +2,8 @@ package com.vaadin.tatu.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.vaadin.spring.events.annotation.EnableEventBus;
@@ -24,6 +24,7 @@ public class Application extends SpringBootServletInitializer {
 
 	public static final String APP_URL = "/";
 	public static final String LOGIN_URL = "/login.html";
+	public static final String LOGOUT_PROCESSING_URL = "/logout";
 	public static final String LOGOUT_URL = "/login.html?logout";
 	public static final String LOGIN_FAILURE_URL = "/login.html?error";
 	public static final String LOGIN_PROCESSING_URL = "/login";
