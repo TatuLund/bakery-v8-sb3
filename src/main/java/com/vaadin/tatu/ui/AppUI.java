@@ -7,6 +7,7 @@ import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.Viewport;
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.DefaultErrorHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
@@ -21,6 +22,7 @@ import com.vaadin.ui.UI;
 @SpringUI
 @Viewport("width=device-width,initial-scale=1.0,user-scalable=no")
 @Title("My-Bakery")
+@Widgetset("com.vaadin.tatu.ui.AppWidgetset")
 public class AppUI extends UI implements HasLogger {
 
     private final SpringViewProvider viewProvider;

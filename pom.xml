@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.9</version>
+		<version>3.5.4</version>
 		<relativePath/>
 	</parent>
 
@@ -15,17 +15,15 @@
 	<name>My-Bakery</name>
 
 	<properties>
-		<vaadin.version>8.27.0</vaadin.version>
-		<vaadin-spring.version>4.0.0</vaadin-spring.version>
+		<vaadin.version>8.32.0</vaadin.version>
+		<vaadin-spring.version>4.0.2</vaadin-spring.version>
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 		<vaadin.widgetset.mode>local</vaadin.widgetset.mode>
-
-		<!-- Overrides for Spring Boot dependencies -->
-<!--		<selenium.version>3.4.0</selenium.version>-->
-<!--		<selenium-htmlunit.version>2.26</selenium-htmlunit.version>-->
+		<vaadin.gwt.version>2.13.0</vaadin.gwt.version>
+		<selenium.version>4.45.0</selenium.version>
 	</properties>
 
 	<repositories>
@@ -37,20 +35,12 @@
 			<id>vaadin-pre</id>
 			<url>https://maven.vaadin.com/vaadin-prereleases</url>
 		</repository>
-		<repository>
-			<id>vaadin-snapshot</id>
-			<url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
-		</repository>
 	</repositories>
 
 	<pluginRepositories>
 		<pluginRepository>
 			<id>vaadin-pre</id>
 			<url>https://maven.vaadin.com/vaadin-prereleases</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>vaadin-snapshot</id>
-			<url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
 		</pluginRepository>
 	</pluginRepositories>
 
@@ -85,12 +75,12 @@
                     <artifactId>tomcat-juli</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>org.mortbay.jasper</groupId>
-                    <artifactId>apache-jsp</artifactId>
+                    <groupId>org.gwtproject</groupId>
+                    <artifactId>gwt-dev</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>apache-jsp</artifactId>
+                    <groupId>org.gwtproject</groupId>
+                    <artifactId>gwt-user</artifactId>
                 </exclusion>
             </exclusions>
 		</dependency>
@@ -120,7 +110,7 @@
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-charts</artifactId>
-			<version>4.3.4</version>
+			<version>4.3.5</version>
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>
@@ -204,10 +194,40 @@
 <!--			<groupId>javax.xml.bind</groupId>-->
 <!--			<artifactId>jaxb-api</artifactId>-->
 <!--		</dependency>-->
-
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.23.1</version>
+        </dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.gwtproject</groupId>
+			<artifactId>gwt-dev</artifactId>
+			<version>${vaadin.gwt.version}</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.tomcat</groupId>
+					<artifactId>tomcat-juli</artifactId>
+				</exclusion>
+                <exclusion>
+                    <groupId>org.mortbay.jasper</groupId>
+                    <artifactId>apache-jsp</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>apache-jsp</artifactId>
+                </exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.gwtproject</groupId>
+			<artifactId>gwt-user</artifactId>
+			<version>${vaadin.gwt.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Testing -->
@@ -227,9 +247,15 @@
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-testbench-core</artifactId>
-			<version>5.3.0</version><!--$NO-MVN-MAN-VER$ -->
+			<version>5.4.0</version><!--$NO-MVN-MAN-VER$ -->
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -238,16 +264,12 @@
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-maven-plugin</artifactId>
 				<version>${vaadin.plugin.version}</version>
-				<dependencies>
-					<!-- For Travis -->
-					<dependency>
-						<groupId>xml-apis</groupId>
-						<artifactId>xml-apis</artifactId>
-						<version>1.4.01</version>
-					</dependency>
-				</dependencies>
 				<configuration>
-					<extraJvmArgs>-Xmx2G</extraJvmArgs>
+                    <webappDirectory>${basedir}/target/classes/VAADIN/widgetsets</webappDirectory>
+                    <draftCompile>true</draftCompile>
+                    <strict>false</strict>
+                    <style>PRETTY</style>
+					<!-- <extraJvmArgs>-Xmx2G</extraJvmArgs> -->
 				</configuration>
 				<executions>
 					<execution>
